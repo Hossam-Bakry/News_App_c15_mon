@@ -1,9 +1,10 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:news_app_c15_mon/core/gen/assets.gen.dart';
 import 'package:news_app_c15_mon/core/constants/app_assets.dart';
+import 'package:news_app_c15_mon/core/gen/assets.gen.dart';
 import 'package:news_app_c15_mon/modules/home/model/category_data_model.dart';
+import 'package:news_app_c15_mon/modules/home/pages/category_details_view.dart';
 import 'package:news_app_c15_mon/modules/home/pages/custom_drawer.dart';
 import 'package:news_app_c15_mon/modules/home/widgets/category_card_widget.dart';
 
@@ -119,12 +120,7 @@ class _HomeViewState extends State<HomeView> {
                   ),
                 ),
               )
-              : Center(
-                child: Text(
-                  selectedCategory!.id,
-                  style: theme.textTheme.headlineSmall,
-                ),
-              ),
+              : CategoryDetailsView(categoryDataModel: selectedCategory!),
     );
   }
 

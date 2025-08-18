@@ -7,6 +7,10 @@ void main() {
   runApp(const MyApp());
 }
 
+/// MVVM
+/// Bloc
+/// Repository Design Pattern
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
