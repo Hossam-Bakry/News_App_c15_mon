@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app_c15_mon/core/theme/color_pallete.dart';
-import 'package:news_app_c15_mon/modules/home/cubit/cubit.dart';
-import 'package:news_app_c15_mon/modules/home/cubit/states.dart';
-import 'package:news_app_c15_mon/modules/home/view/articles_list_view.dart';
+import 'package:news_app_c15_mon/modules/home/RepositoryDesignPattern/cubit/cubit.dart';
+import 'package:news_app_c15_mon/modules/home/RepositoryDesignPattern/cubit/states.dart';
+import 'package:news_app_c15_mon/modules/home/RepositoryDesignPattern/view/articles_list_view.dart';
 import 'package:news_app_c15_mon/modules/home/widgets/tab_bar_item_widget.dart';
 
 /// Stream

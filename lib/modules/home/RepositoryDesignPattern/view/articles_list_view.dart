@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:news_app_c15_mon/modules/home/cubit/cubit.dart';
-import 'package:news_app_c15_mon/modules/home/cubit/states.dart';
+import 'package:news_app_c15_mon/modules/home/RepositoryDesignPattern/cubit/cubit.dart';
+import 'package:news_app_c15_mon/modules/home/RepositoryDesignPattern/cubit/states.dart';
 import 'package:news_app_c15_mon/modules/home/model/source_data.dart';
 import 'package:news_app_c15_mon/modules/home/widgets/article_item_widget.dart';
 

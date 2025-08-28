@@ -1,21 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app_c15_mon/core/constants/app_assets.dart';
-import 'package:news_app_c15_mon/modules/home/cubit/cubit.dart';
-import 'package:news_app_c15_mon/modules/home/cubit/states.dart';
-import 'package:news_app_c15_mon/modules/home/view/category_details_view.dart';
-import 'package:news_app_c15_mon/modules/home/view/custom_drawer.dart';
+import 'package:news_app_c15_mon/modules/home/RepositoryDesignPattern/cubit/cubit.dart';
+import 'package:news_app_c15_mon/modules/home/RepositoryDesignPattern/cubit/states.dart';
+import 'package:news_app_c15_mon/modules/home/RepositoryDesignPattern/data/home_data_source.dart';
+import 'package:news_app_c15_mon/modules/home/RepositoryDesignPattern/data/home_remote_api_data_source.dart';
+import 'package:news_app_c15_mon/modules/home/RepositoryDesignPattern/repositories/home_repositories.dart';
+import 'package:news_app_c15_mon/modules/home/RepositoryDesignPattern/view/category_details_view.dart';
+import 'package:news_app_c15_mon/modules/home/RepositoryDesignPattern/view/custom_drawer.dart';
 import 'package:news_app_c15_mon/modules/home/widgets/category_card_widget.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  late HomeRepositories _homeRepositories;
+  late HomeInterfaceDataSource _homeInterfaceDataSource;
+
+  @override
+  void initState() {
+    // Dependency Injection
+    _homeInterfaceDataSource = HomeRemoteApiDataSource();
+    _homeRepositories = HomeRepositories(_homeInterfaceDataSource);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
 
     return BlocProvider<HomeCubit>(
-      create: (context) => HomeCubit(),
+      create: (context) => HomeCubit(_homeRepositories),
       child: BlocBuilder<HomeCubit, HomeStates>(
         builder: (context, state) {
           return Scaffold(

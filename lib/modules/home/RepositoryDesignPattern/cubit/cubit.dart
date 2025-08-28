@@ -1,13 +1,15 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app_c15_mon/core/gen/assets.gen.dart';
-import 'package:news_app_c15_mon/modules/home/cubit/states.dart';
+import 'package:news_app_c15_mon/modules/home/RepositoryDesignPattern/cubit/states.dart';
+import 'package:news_app_c15_mon/modules/home/RepositoryDesignPattern/repositories/home_repositories.dart';
 import 'package:news_app_c15_mon/modules/home/model/articles_List_data.dart';
 import 'package:news_app_c15_mon/modules/home/model/category_data_model.dart';
 import 'package:news_app_c15_mon/modules/home/model/source_data.dart';
-import 'package:news_app_c15_mon/network/api_requests.dart';
 
 class HomeCubit extends Cubit<HomeStates> {
-  HomeCubit() : super(HomeInitialState());
+  final HomeRepositories _homeRepositories;
+
+  HomeCubit(this._homeRepositories) : super(HomeInitialState());
 
   // Inherited widget
   static HomeCubit get(context) => BlocProvider.of<HomeCubit>(context);
@@ -83,7 +85,10 @@ class HomeCubit extends Cubit<HomeStates> {
   Future<void> getSources() async {
     emit(LoadingGetSourcesListState());
     try {
-      _sourcesList = await ApiRequests.getSources(_selectedCategory!.id);
+      _sourcesList = await _homeRepositories.getSourcesList(
+        _selectedCategory!.id,
+      );
+      // _sourcesList = await ApiRequests.getSources(_selectedCategory!.id);
       emit(SuccessGetSourcesListState(sourcesList: _sourcesList));
     } catch (e) {
       emit(ErrorGetSourcesListState());
@@ -94,7 +99,8 @@ class HomeCubit extends Cubit<HomeStates> {
   Future<void> getArticles(String sourcesId) async {
     emit(LoadingGetArticlesListState());
     try {
-      _articlesList = await ApiRequests.getArticles(sourcesId);
+      _articlesList = await _homeRepositories.getArticlesList(sourcesId);
+      // _articlesList = await ApiRequests.getArticles(sourcesId);
 
       emit(SuccessGetArticlesListState());
     } catch (e) {
