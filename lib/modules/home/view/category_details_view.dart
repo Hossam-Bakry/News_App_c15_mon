@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app_c15_mon/core/theme/color_pallete.dart';
+import 'package:news_app_c15_mon/modules/home/cubit/cubit.dart';
+import 'package:news_app_c15_mon/modules/home/cubit/states.dart';
 import 'package:news_app_c15_mon/modules/home/view/articles_list_view.dart';
-import 'package:news_app_c15_mon/modules/home/view_model/home_view_model.dart';
 import 'package:news_app_c15_mon/modules/home/widgets/tab_bar_item_widget.dart';
-import 'package:provider/provider.dart';
 
+/// Stream
 class CategoryDetailsView extends StatefulWidget {
   // final CategoryDataModel categoryDataModel;
 
@@ -17,40 +19,50 @@ class CategoryDetailsView extends StatefulWidget {
 }
 
 class _CategoryDetailsViewState extends State<CategoryDetailsView> {
+  late HomeCubit cubit;
+
   @override
   void initState() {
-    Provider.of<HomeViewModel>(context, listen: false).getSources();
+    cubit = HomeCubit.get(context);
+
+    cubit.getSources();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     /// MVVM [Model View ViewModel]
-    return Consumer<HomeViewModel>(
-      builder: (context, viewModel, _) {
+    return BlocConsumer<HomeCubit, HomeStates>(
+      listener: (context, state) {
+        /// Listen to states
+      },
+      builder: (context, state) {
+        if (state is LoadingGetSourcesListState) {
+          return Center(child: CircularProgressIndicator());
+        }
         return Column(
           children: [
             DefaultTabController(
-              length: viewModel.sourcesList.length,
+              length: cubit.sourcesList.length,
               child: TabBar(
-                onTap: viewModel.changeTapIndex,
+                onTap: cubit.changeTapIndex,
                 isScrollable: true,
                 dividerColor: Colors.transparent,
                 indicatorColor: ColorPallete.generalTextColor,
                 tabs:
-                    viewModel.sourcesList.map((element) {
+                    cubit.sourcesList.map((element) {
                       return TabBarItemWidget(
                         sourceData: element,
                         isSelected:
-                            viewModel.currentTapIndex ==
-                            viewModel.sourcesList.indexOf(element),
+                            cubit.currentTapIndex ==
+                            cubit.sourcesList.indexOf(element),
                       );
                     }).toList(),
               ),
             ),
-            if (viewModel.sourcesList.isNotEmpty)
+            if (cubit.sourcesList.isNotEmpty)
               ArticlesListView(
-                sourceData: viewModel.sourcesList[viewModel.currentTapIndex],
+                sourceData: cubit.sourcesList[cubit.currentTapIndex],
               ),
           ],
         );

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app_c15_mon/core/constants/app_assets.dart';
+import 'package:news_app_c15_mon/modules/home/cubit/cubit.dart';
+import 'package:news_app_c15_mon/modules/home/cubit/states.dart';
 import 'package:news_app_c15_mon/modules/home/view/category_details_view.dart';
 import 'package:news_app_c15_mon/modules/home/view/custom_drawer.dart';
-import 'package:news_app_c15_mon/modules/home/view_model/home_view_model.dart';
 import 'package:news_app_c15_mon/modules/home/widgets/category_card_widget.dart';
-import 'package:provider/provider.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -13,16 +14,16 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
 
-    return ChangeNotifierProvider(
-      create: (context) => HomeViewModel(),
-      child: Consumer<HomeViewModel>(
-        builder: (context, viewModel, _) {
+    return BlocProvider<HomeCubit>(
+      create: (context) => HomeCubit(),
+      child: BlocBuilder<HomeCubit, HomeStates>(
+        builder: (context, state) {
           return Scaffold(
             appBar: AppBar(
               title: Text(
-                viewModel.selectedCategory == null
+                HomeCubit.get(context).selectedCategory == null
                     ? 'Home'
-                    : viewModel.selectedCategory!.title,
+                    : HomeCubit.get(context).selectedCategory!.title,
               ),
               actions: [
                 Padding(
@@ -33,12 +34,12 @@ class HomeView extends StatelessWidget {
             ),
             drawer: CustomDrawer(
               onTap: () {
-                viewModel.onCategoryClicked();
+                HomeCubit.get(context).onCategoryClicked();
                 Navigator.pop(context);
               },
             ),
             body:
-                viewModel.selectedCategory == null
+                HomeCubit.get(context).selectedCategory == null
                     ? Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: SingleChildScrollView(
@@ -59,14 +60,16 @@ class HomeView extends StatelessWidget {
                                 return CategoryCardWidget(
                                   index: index,
                                   categoryDataModel:
-                                      viewModel.categories[index],
-                                  onTap: viewModel.onCategoryClicked,
+                                      HomeCubit.get(context).categories[index],
+                                  onTap:
+                                      HomeCubit.get(context).onCategoryClicked,
                                 );
                               },
                               separatorBuilder: (context, index) {
                                 return SizedBox(height: 15);
                               },
-                              itemCount: viewModel.categories.length,
+                              itemCount:
+                                  HomeCubit.get(context).categories.length,
                             ),
                           ],
                         ),

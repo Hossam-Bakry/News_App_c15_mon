@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news_app_c15_mon/modules/home/cubit/cubit.dart';
+import 'package:news_app_c15_mon/modules/home/cubit/states.dart';
 import 'package:news_app_c15_mon/modules/home/model/source_data.dart';
-import 'package:news_app_c15_mon/modules/home/view_model/home_view_model.dart';
 import 'package:news_app_c15_mon/modules/home/widgets/article_item_widget.dart';
-import 'package:provider/provider.dart';
 
 class ArticlesListView extends StatefulWidget {
   final SourceData sourceData;
@@ -14,28 +15,28 @@ class ArticlesListView extends StatefulWidget {
 }
 
 class _ArticlesListViewState extends State<ArticlesListView> {
+  late HomeCubit cubit;
+
   @override
   void initState() {
-    Provider.of<HomeViewModel>(
-      context,
-      listen: false,
-    ).getArticles(widget.sourceData.id);
+    cubit = HomeCubit.get(context);
+    cubit.getArticles(widget.sourceData.id);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Consumer<HomeViewModel>(
-        builder: (context, viewModel, _) {
+      child: BlocBuilder<HomeCubit, HomeStates>(
+        builder: (context, states) {
           return ListView.separated(
             itemBuilder: (context, index) {
-              return ArticleItemWidget(articles: viewModel.articlesList[index]);
+              return ArticleItemWidget(articles: cubit.articlesList[index]);
             },
             separatorBuilder: (context, index) {
               return SizedBox(height: 16);
             },
-            itemCount: viewModel.articlesList.length,
+            itemCount: cubit.articlesList.length,
           );
         },
       ),
